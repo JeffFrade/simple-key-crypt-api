@@ -13,3 +13,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::post('/crypt', 'CryptController@crypt')->name('crypt');
+Route::post('/decrypt', 'CryptController@decrypt')->name('decrypt');
+Route::post('/alphabet', 'CryptController@alphabet')->name('alphabet');
