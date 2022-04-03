@@ -1,0 +1,33 @@
+version: '3.2'
+services:
+  php-fpm:
+    build: ./docker/php
+    image: jefffrade/crypt-api:php-fpm
+    restart: on-failure
+    container_name: crypt-api-php-fpm
+    command: php-fpm
+    volumes:
+      - ./:/crypt-api
+    healthcheck:
+      test: ['CMD', 'sh', '-c', 'netstat -an | fgrep 9000 | fgrep -q LISTEN']
+      interval: 10s
+      timeout: 5s
+      retries: 2
+
+  nginx:
+    build: ./docker/nginx
+    image: jefffrade/crypt-api:nginx
+    restart: on-failure
+    container_name: crypt-api-nginx
+    command: nginx -g "daemon off;"
+    links:
+      - php-fpm
+    ports:
+      - "${DOCKER_NGINX_PORT}:80"
+    volumes:
+      - ./:/crypt-api
+    healthcheck:
+      test: ['CMD', 'sh', '-c', 'netstat -an | fgrep 80 | fgrep -q LISTEN']
+      interval: 10s
+      timeout: 5s
+      retries: 2
